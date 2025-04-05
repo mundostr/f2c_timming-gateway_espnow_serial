@@ -4,6 +4,7 @@
 
 namespace main {
 	uint32_t led_timer = 0, lap_counter_1_timer = 0, lap_counter_2_timer = 0, lap_counter_3_timer = 0;
+    int lap_counter_1_status = 0, lap_counter_2_status = 0, lap_counter_3_status = 0;
 
 	void init() {
         pinMode(LED_PIN, OUTPUT);
@@ -39,16 +40,34 @@ namespace main {
         if (strcmp(incoming, "1,BEAT") == 0) {
             digitalWrite(LAP_COUNTER_1_PIN, HIGH);
             quickEspNow.send(address, (uint8_t*)"4,CONN", 6);
+
+            if (lap_counter_1_status == 0) {
+                lap_counter_1_status = 1;
+                Serial.printf("CON|1|1");
+            }
+
             lap_counter_1_timer = millis();
         
         } else if (strcmp(incoming, "2,BEAT") == 0) {
             digitalWrite(LAP_COUNTER_2_PIN, HIGH);
             quickEspNow.send(address, (uint8_t*)"4,CONN", 6);
+        
+            if (lap_counter_2_status == 0) {
+                lap_counter_2_status = 1;
+                Serial.printf("CON|2|1");
+            }
+
             lap_counter_2_timer = millis();
         
         } else if (strcmp(incoming, "3,BEAT") == 0) {
             digitalWrite(LAP_COUNTER_3_PIN, HIGH);
             quickEspNow.send(address, (uint8_t*)"4,CONN", 6);
+
+            if (lap_counter_3_status == 0) {
+                lap_counter_3_status = 1;
+                Serial.printf("CON|3|1");
+            }
+            
             lap_counter_3_timer = millis();
         
         } else {
@@ -66,7 +85,7 @@ namespace main {
             }
         }
 
-        if (DEBUG) Serial.printf ("ESPNOW received: %s\n", incoming);
+        // if (DEBUG) Serial.printf ("ESPNOW received: %s\n", incoming);
 	}
 	
 	void init_espnow(bool customMac = false) {
@@ -96,16 +115,34 @@ namespace main {
     void verify_lap_counters_leds() {
         if (millis() - lap_counter_1_timer >= LAPTIMERS_LEDS_RESET_FREC) {
             digitalWrite(LAP_COUNTER_1_PIN, LOW);
+            
+            if (lap_counter_1_status == 1) {
+                lap_counter_1_status = 0;
+                Serial.printf("CON|1|0");
+            }
+            
             lap_counter_1_timer = millis();
         }
 
         if (millis() - lap_counter_2_timer >= LAPTIMERS_LEDS_RESET_FREC) {
             digitalWrite(LAP_COUNTER_2_PIN, LOW);
+            
+            if (lap_counter_2_status == 1) {
+                lap_counter_2_status = 0;
+                Serial.printf("CON|2|0");
+            }
+
             lap_counter_2_timer = millis();
         }
 
         if (millis() - lap_counter_3_timer >= LAPTIMERS_LEDS_RESET_FREC) {
             digitalWrite(LAP_COUNTER_3_PIN, LOW);
+            
+            if (lap_counter_3_status == 1) {
+                lap_counter_3_status = 0;
+                Serial.printf("CON|3|0");
+            }
+
             lap_counter_3_timer = millis();
         }
     }
