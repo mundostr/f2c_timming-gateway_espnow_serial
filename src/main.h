@@ -85,7 +85,7 @@ namespace main {
             }
         }
 
-        Serial.printf ("ESPNOW received: %s\n", incoming);
+        // Serial.printf ("ESPNOW received: %s\n", incoming);
 	}
 	
 	void init_espnow(bool customMac = false) {
