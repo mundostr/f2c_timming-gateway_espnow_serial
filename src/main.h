@@ -43,7 +43,7 @@ namespace main {
 
             if (lap_counter_1_status == 0) {
                 lap_counter_1_status = 1;
-                Serial.printf("CON|1|1");
+                Serial.printf("CON|001-001");
             }
 
             lap_counter_1_timer = millis();
@@ -54,7 +54,7 @@ namespace main {
         
             if (lap_counter_2_status == 0) {
                 lap_counter_2_status = 1;
-                Serial.printf("CON|2|1");
+                Serial.printf("CON|002-001");
             }
 
             lap_counter_2_timer = millis();
@@ -65,7 +65,7 @@ namespace main {
 
             if (lap_counter_3_status == 0) {
                 lap_counter_3_status = 1;
-                Serial.printf("CON|3|1");
+                Serial.printf("CON|003-001");
             }
             
             lap_counter_3_timer = millis();
@@ -85,7 +85,7 @@ namespace main {
             }
         }
 
-        // if (DEBUG) Serial.printf ("ESPNOW received: %s\n", incoming);
+        Serial.printf ("ESPNOW received: %s\n", incoming);
 	}
 	
 	void init_espnow(bool customMac = false) {
@@ -118,7 +118,7 @@ namespace main {
             
             if (lap_counter_1_status == 1) {
                 lap_counter_1_status = 0;
-                Serial.printf("CON|1|0");
+                Serial.printf("CON|001-000");
             }
             
             lap_counter_1_timer = millis();
@@ -129,7 +129,7 @@ namespace main {
             
             if (lap_counter_2_status == 1) {
                 lap_counter_2_status = 0;
-                Serial.printf("CON|2|0");
+                Serial.printf("CON|002-000");
             }
 
             lap_counter_2_timer = millis();
@@ -140,7 +140,7 @@ namespace main {
             
             if (lap_counter_3_status == 1) {
                 lap_counter_3_status = 0;
-                Serial.printf("CON|3|0");
+                Serial.printf("CON|003-000");
             }
 
             lap_counter_3_timer = millis();
