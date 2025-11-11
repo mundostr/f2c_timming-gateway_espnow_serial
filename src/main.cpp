@@ -17,6 +17,9 @@ ATENCION!: recordar borrar la flash completa
 void setup() {
 	Serial.begin(SERIAL_CONSOLE_BAUDS);
     // SerialLog.begin(SERIAL_CONSOLE_BAUDS, SERIAL_8N1, 17, 18);
+	// WiFi.mode(WIFI_MODE_STA);
+    // Serial.println(WiFi.macAddress());
+	// while(1);
 	
 	main::init();
 	pushbtn::init();

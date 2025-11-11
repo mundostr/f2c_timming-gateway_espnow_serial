@@ -4,10 +4,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
-#include <Button2.h>
 #include <QuickEspNow.h>
+#include <Button2.h>
 
-#define DEBUG false
+#define DEBUG true
 
 #define LED_PIN 25 // 2 Node32S, 33 ESP32 Cam
 #define POWER_PIN 33
@@ -25,15 +25,14 @@
 #define TTL_REPORT_TIME 1000
 #define ESPNOW_CHANNEL 1
 #define GATEWAY_ID "GWVCC"
+#define USE_BROADCAST 1
 
 // HardwareSerial SerialLog(1);
-esp_now_peer_info_t peer_info;
 
 namespace config {
-	// const IPAddress LOCAL_IP(192, 168, 4, 100);
-	// const IPAddress LOCAL_GW(192, 168, 4, 1);
-	// const IPAddress LOCAL_SN(255, 255, 255, 0);
-	const uint8_t custom_mac_master[] = { 0xB4, 0xE6, 0x2D, 0xE9, 0xFE, 0x6E };
+	// const uint8_t this_mac_address[] = { 0x30, 0xAE, 0xA4, 0x1F, 0x44, 0x0C };
+	// const uint8_t custom_mac_master[] = { 0xB4, 0xE6, 0x2D, 0xE9, 0xFE, 0x6E };
+	const uint8_t broadcast_mac_address[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 	bool led_on = false;
 	bool race_started = false;

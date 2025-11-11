@@ -31,7 +31,7 @@ namespace main {
 		led_timer = millis();
 	}
 
-	void dataReceived (uint8_t* address, uint8_t* data, uint8_t len, signed int rssi, bool broadcast) {
+    void on_data_recv(uint8_t* address, uint8_t* data, uint8_t len, signed int rssi, bool broadcast) {
         turn_led_on();
 
         char incoming[16];
@@ -87,17 +87,34 @@ namespace main {
 
         // Serial.printf ("ESPNOW received: %s\n", incoming);
 	}
-	
+
+    void on_data_sent(uint8_t* address, uint8_t status) {
+    }
+
 	void init_espnow(bool customMac = false) {
-        WiFi.mode (WIFI_STA);
-        WiFi.disconnect (false, true);
-        if (customMac) esp_wifi_set_mac(WIFI_IF_STA, &config::custom_mac_master[0]);
+        // if (customMac) esp_wifi_set_mac(WIFI_IF_STA, config::custom_mac_master);
+        WiFi.mode(WIFI_MODE_STA);
+        WiFi.disconnect(false, true);
 
-		quickEspNow.onDataRcvd(dataReceived);
-		// quickEspNow.begin(ESPNOW_CHANNEL, WIFI_IF_AP);
-        quickEspNow.begin(ESPNOW_CHANNEL);
+        quickEspNow.begin (ESPNOW_CHANNEL, 0, false);
+        quickEspNow.onDataSent (on_data_sent);
+        quickEspNow.onDataRcvd (on_data_recv);
 
-		if (DEBUG) Serial.println("ESP-NOW inicializado");
+        esp_now_peer_info_t peer = {};
+        peer.channel = ESPNOW_CHANNEL;
+        peer.encrypt = false;
+        peer.ifidx = WIFI_IF_STA;
+        memcpy(peer.peer_addr, config::broadcast_mac_address, 6);
+        
+        if (esp_now_add_peer(&peer) != ESP_OK) {
+            #if DEBUG
+            Serial.println("Failed to add peer");
+            #endif
+
+            while (1);
+        }
+
+		if (DEBUG) Serial.println("ESPNOW OK");
 		if (DEBUG) Serial.println(WiFi.localIP());
 		if (DEBUG) Serial.println(WiFi.channel());
 		if (DEBUG) Serial.println(WiFi.macAddress());
@@ -105,9 +122,9 @@ namespace main {
 
 	void check_led_advertising() {
 		if (config::led_on && (millis() - led_timer >= LED_NOTIF_FREC)) {
+			led_timer = millis();
 			digitalWrite(LED_PIN, LOW);
 			config::led_on = false;
-			led_timer = millis();
 		}
 
 	}
